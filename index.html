@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Antar – Pesan Ojek Tanpa Login</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{--bg:#f4f6f4;--card:#fff;--text:#14201a;--muted:#5d6b63;--accent:#00a35c;--accent-t:#fff;--line:#dfe5e1;--pick:#00a35c;--drop:#e5484d}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1512;--card:#19211d;--text:#eef3f0;--muted:#9aa8a0;--line:#2a3530}}
@@ -15,13 +14,17 @@ header{padding:12px 16px 8px;display:flex;align-items:center;justify-content:spa
 h1{font-size:20px;margin:0;color:var(--accent)}
 .sub{font-size:12px;color:var(--muted)}
 .tools{display:flex;gap:6px}
-#map{flex:1;min-height:280px;margin:0 12px;border-radius:16px;border:1px solid var(--line);z-index:0}
-.sheet{background:var(--card);margin:10px 12px 12px;border-radius:16px;border:1px solid var(--line);padding:14px}
-.row{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:14px}
+.search{position:relative;z-index:10;background:var(--card);margin:0 12px 10px;border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.srow{display:flex;align-items:center;gap:10px;margin:4px 0}
+.srow .box{flex:1;min-width:0}
+.srow gmp-place-autocomplete{width:100%;color-scheme:light}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
-.row b{display:block;font-size:12px;color:var(--muted);font-weight:500}
-.hint{font-size:13px;color:var(--muted);margin:0 0 6px}
-#fare{margin-top:8px;padding:12px;border-radius:12px;background:var(--bg);display:none;user-select:none;-webkit-user-select:none;cursor:pointer}
+#map{flex:1;min-height:260px;margin:0 12px;border-radius:16px;border:1px solid var(--line);z-index:0}
+.sheet{background:var(--card);margin:10px 12px 12px;border-radius:16px;border:1px solid var(--line);padding:14px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.addr{font-size:13px;margin:6px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.addr b{color:var(--muted);font-weight:500}
+#fare{margin-top:10px;padding:12px;border-radius:12px;background:var(--bg);display:none;user-select:none;-webkit-user-select:none;cursor:pointer}
 #fare .price{font-size:26px;font-weight:700}
 #fare .meta{font-size:12px;color:var(--muted)}
 button{font:inherit;border:0;border-radius:12px;padding:10px 13px;cursor:pointer}
@@ -33,9 +36,9 @@ button{font:inherit;border:0;border-radius:12px;padding:10px 13px;cursor:pointer
 .step.done{color:var(--accent)}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
 #modal.show{display:flex}
-.box{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:340px}
-.box h2{margin:0 0 4px;font-size:18px}
-.box input{width:100%;font:inherit;font-size:22px;letter-spacing:4px;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);margin:12px 0 6px}
+.mbox{background:var(--card);border-radius:16px;padding:20px;width:100%;max-width:340px}
+.mbox h2{margin:0 0 4px;font-size:18px}
+.mbox input{width:100%;font:inherit;font-size:22px;letter-spacing:4px;text-align:center;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);margin:12px 0 6px}
 .err{color:var(--drop);font-size:13px;min-height:18px}
 .shake{animation:sh .3s}
 @keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -52,150 +55,219 @@ button{font:inherit;border:0;border-radius:12px;padding:10px 13px;cursor:pointer
   <div class="tools"><button class="ghost" id="loc">📍 Lokasi saya</button><button class="ghost" id="reset">Ulangi</button></div>
 </header>
 
+<div class="search">
+  <div class="srow"><span class="dot" style="background:var(--pick)"></span><div class="box" id="sa"></div></div>
+  <div class="srow"><span class="dot" style="background:var(--drop);border-radius:3px"></span><div class="box" id="sb"></div></div>
+</div>
+
 <div id="map"></div>
 
 <div class="sheet">
-  <p class="hint" id="hint">Ketuk peta untuk memilih titik jemput.</p>
-  <div class="row"><span class="dot" style="background:var(--pick)"></span><div><b>Jemput</b><span id="ta">Belum dipilih</span></div></div>
-  <div class="row"><span class="dot" style="background:var(--drop);border-radius:3px"></span><div><b>Antar</b><span id="tb">Belum dipilih</span></div></div>
+  <p class="hint" id="hint">Cari lokasi jemput, atau ketuk peta.</p>
+  <div class="addr" id="ta"></div><div class="addr" id="tb"></div>
   <div id="fare"><div class="meta">Ongkos</div><div class="price" id="price"></div><div class="meta" id="meta"></div></div>
   <div id="status"></div>
 </div>
 
-<div id="modal"><div class="box" id="box">
+<div id="modal"><div class="mbox" id="box">
   <h2>ID Driver</h2><div class="sub">Masukkan ID driver untuk memulai pengantaran.</div>
   <input id="did" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="••••••">
   <div class="err" id="err"></div>
   <div class="btns"><button class="ghost" id="cancel">Batal</button><button class="primary" id="ok">Mulai</button></div>
 </div></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-(function(){
-  // ====== PENGATURAN ======
-  var DRIVER_ID = "234817";          // ID driver sementara
-  var BASE = 8000, PER_KM = 2500, MIN = 10000;   // tarif (Rp)
-  var CENTER = [-7.0451, 112.7350], ZOOM = 14;    // pusat peta awal (Bangkalan)
-  // ========================
+// ============ PENGATURAN ============
+const API_KEY   = "ISI_API_KEY_GOOGLE_MAPS_DI_SINI";
+const DRIVER_ID = "234817";                       // ID driver sementara
+const BASE = 8000, PER_KM = 2500, MIN = 10000;    // tarif (Rp)
+const CENTER = { lat: -7.0451, lng: 112.7350 }, ZOOM = 14;   // pusat peta awal
+// ====================================
 
-  var $ = function(i){return document.getElementById(i)};
-  var map = L.map("map",{zoomControl:true}).setView(CENTER,ZOOM);
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+const $ = i => document.getElementById(i);
+const fmt = n => "Rp " + n.toLocaleString("id-ID");
+const toLL = p => typeof p.lat === "function" ? { lat: p.lat(), lng: p.lng() } : { lat: p.lat, lng: p.lng };
+const coord = p => p.lat.toFixed(5) + ", " + p.lng.toFixed(5);
+function hav(a, b) {
+  const R = 6371, r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lng - a.lng) * r;
+  const x = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+const pinEl = c => { const d = document.createElement("div"); d.className = "pin " + c; return d; };
 
-  function icon(c){return L.divIcon({className:"",html:'<div class="pin '+c+'"></div>',iconSize:[22,22],iconAnchor:[11,11]})}
-  var A=null,B=null,mA=null,mB=null,line=null,coords=[],locked=false,token=0;
+if (!API_KEY || API_KEY.startsWith("ISI_")) {
+  $("hint").textContent = "Isi API_KEY Google Maps di bagian PENGATURAN pada file ini.";
+} else {
+  window.gm_authFailure = () => { $("hint").textContent = "API key Google Maps ditolak. Periksa key, billing, dan pembatasan domain."; };
+  window.initMap = init;
+  const s = document.createElement("script");
+  s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(API_KEY) +
+          "&loading=async&v=weekly&language=id&region=ID&callback=initMap";
+  s.onerror = () => { $("hint").textContent = "Gagal memuat Google Maps."; };
+  document.head.appendChild(s);
+}
 
-  function fmt(n){return "Rp "+n.toLocaleString("id-ID")}
-  function lbl(p){return p.lat.toFixed(5)+", "+p.lng.toFixed(5)}
-  function hav(a,b){var R=6371,r=Math.PI/180,dl=(b.lat-a.lat)*r,dn=(b.lng-a.lng)*r;
-    var x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)*Math.sin(dn/2);
-    return 2*R*Math.asin(Math.sqrt(x))}
+async function init() {
+  const { Map, Polyline } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+  const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
+  const { Route } = await google.maps.importLibrary("routes");
+  const { Geocoder } = await google.maps.importLibrary("geocoding");
+  const geocoder = new Geocoder();
 
-  function setA(ll){
-    A=ll;$("ta").textContent=lbl(ll);
-    if(mA)mA.setLatLng(ll);else{mA=L.marker(ll,{icon:icon("a"),draggable:true}).addTo(map);
-      mA.on("dragend",function(){if(locked)return;A=mA.getLatLng();$("ta").textContent=lbl(A);if(B)calc()})}
+  const map = new Map($("map"), { center: CENTER, zoom: ZOOM, mapId: "DEMO_MAP_ID",
+    disableDefaultUI: true, zoomControl: true, gestureHandling: "greedy" });
+
+  const P = { A: null, B: null }, M = { A: null, B: null }, S = {};
+  let line = null, coords = [], locked = false, token = 0, drv = null;
+  const TXT = { A: "ta", B: "tb" }, LBL = { A: "Jemput: ", B: "Antar: " };
+
+  // ----- kolom pencarian (Places Autocomplete) -----
+  function mkSearch(kind, holder, ph) {
+    const el = new PlaceAutocompleteElement({ includedRegionCodes: ["id"] });
+    try { el.placeholder = ph; } catch (e) {}
+    holder.appendChild(el);
+    const pick = async ev => {
+      if (locked) return;
+      try {
+        const pl = ev.place || ev.placePrediction.toPlace();
+        await pl.fetchFields({ fields: ["displayName", "formattedAddress", "location"] });
+        setPoint(kind, toLL(pl.location), pl.formattedAddress || pl.displayName, true);
+        map.panTo(toLL(pl.location));
+      } catch (e) { $("hint").textContent = "Lokasi tidak bisa dibuka. Coba lokasi lain."; }
+    };
+    el.addEventListener("gmp-select", pick);
+    el.addEventListener("gmp-placeselect", pick);
+    S[kind] = el;
   }
-  function setB(ll){
-    B=ll;$("tb").textContent=lbl(ll);
-    if(mB)mB.setLatLng(ll);else{mB=L.marker(ll,{icon:icon("b"),draggable:true}).addTo(map);
-      mB.on("dragend",function(){if(locked)return;B=mB.getLatLng();$("tb").textContent=lbl(B);calc()})}
-  }
-  function clearRoute(){if(line){map.removeLayer(line);line=null}coords=[];$("fare").style.display="none"}
+  mkSearch("A", $("sa"), "Cari lokasi jemput");
+  mkSearch("B", $("sb"), "Cari lokasi tujuan");
 
-  map.on("click",function(e){
-    if(locked)return;
-    if(!A||(A&&B)){
-      if(mB){map.removeLayer(mB);mB=null}B=null;clearRoute();$("tb").textContent="Belum dipilih";
-      setA(e.latlng);$("hint").textContent="Sekarang ketuk peta untuk memilih titik antar.";
-    }else{
-      setB(e.latlng);calc();
+  // ----- titik jemput / antar -----
+  async function nameOf(ll) {
+    try { const r = await geocoder.geocode({ location: ll }); if (r.results[0]) return r.results[0].formatted_address; } catch (e) {}
+    return coord(ll);
+  }
+  function setPoint(kind, ll, name, fromSearch) {
+    P[kind] = ll;
+    $(TXT[kind]).innerHTML = "<b>" + LBL[kind] + "</b>" + (name ? esc(name) : coord(ll));
+    if (!M[kind]) {
+      M[kind] = new AdvancedMarkerElement({ map, position: ll, content: pinEl(kind.toLowerCase()), gmpDraggable: true });
+      M[kind].addListener("dragend", async () => {
+        if (locked) return;
+        const p = toLL(M[kind].position); P[kind] = p;
+        const n = await nameOf(p); $(TXT[kind]).innerHTML = "<b>" + LBL[kind] + "</b>" + esc(n);
+        syncInput(kind, n); if (P.A && P.B) calc();
+      });
+    } else M[kind].position = ll;
+    if (!fromSearch) syncInput(kind, name);
+    if (kind === "A" && !P.B) $("hint").textContent = "Sekarang cari atau ketuk peta untuk titik antar.";
+    if (P.A && P.B) calc();
+  }
+  function syncInput(kind, text) { try { S[kind].value = text || ""; } catch (e) {} }
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  function clearRoute() { if (line) { line.setMap(null); line = null; } coords = []; $("fare").style.display = "none"; }
+  function removePoint(kind) {
+    if (M[kind]) { M[kind].map = null; M[kind] = null; } P[kind] = null; $(TXT[kind]).innerHTML = ""; syncInput(kind, "");
+  }
+
+  map.addListener("click", async e => {
+    if (locked) return;
+    const ll = toLL(e.latLng);
+    let kind = !P.A ? "A" : !P.B ? "B" : "A";
+    if (P.A && P.B) { removePoint("B"); clearRoute(); }
+    setPoint(kind, ll, null);                       // tampil koordinat dulu
+    const n = await nameOf(ll);                     // lalu diganti nama alamat
+    if (P[kind] && P[kind].lat === ll.lat && P[kind].lng === ll.lng) {
+      $(TXT[kind]).innerHTML = "<b>" + LBL[kind] + "</b>" + esc(n); syncInput(kind, n);
     }
   });
 
-  function calc(){
-    var my=++token;
-    $("hint").textContent="Menghitung rute…";
-    var url="https://router.project-osrm.org/route/v1/driving/"+A.lng+","+A.lat+";"+B.lng+","+B.lat+"?overview=full&geometries=geojson";
-    fetch(url).then(function(r){return r.json()}).then(function(d){
-      if(my!==token)return;
-      var rt=d.routes&&d.routes[0];if(!rt)throw 0;
-      show(rt.distance/1000,rt.duration/60,rt.geometry.coordinates.map(function(c){return[c[1],c[0]]}));
-    }).catch(function(){
-      if(my!==token)return;
-      var km=hav(A,B)*1.3;show(km,km*3,[[A.lat,A.lng],[B.lat,B.lng]]);
-    });
-  }
-  function show(km,min,pts){
-    clearRoute();coords=pts;
-    line=L.polyline(pts,{color:"#00a35c",weight:5}).addTo(map);
-    map.fitBounds(line.getBounds(),{padding:[40,40]});
-    var fare=Math.max(MIN,Math.round((BASE+km*PER_KM)/500)*500);
-    $("price").textContent=fmt(fare);
-    $("meta").textContent="Jarak "+km.toFixed(1).replace(".",",")+" km · Estimasi "+Math.max(3,Math.round(min))+" menit";
-    $("fare").style.display="block";
-    $("hint").textContent="Titik sudah dipilih. Geser pin atau ketuk peta untuk mengubah.";
+  // ----- hitung rute & ongkos -----
+  async function calc() {
+    const my = ++token; $("hint").textContent = "Menghitung rute…";
+    let km, min, path = null;
+    for (const mode of ["TWO_WHEELER", "DRIVING"]) {
+      try {
+        const { routes } = await Route.computeRoutes({ origin: P.A, destination: P.B, travelMode: mode,
+          fields: ["path", "distanceMeters", "durationMillis"] });
+        if (routes && routes[0] && routes[0].path) {
+          const r = routes[0]; km = r.distanceMeters / 1000; min = r.durationMillis / 60000;
+          path = r.path.map(toLL); break;
+        }
+      } catch (e) { console.warn("Rute " + mode + " gagal:", e); }
+    }
+    if (my !== token) return;
+    if (!path) { km = hav(P.A, P.B) * 1.3; min = km * 3; path = [P.A, P.B]; }
+    clearRoute(); coords = path;
+    line = new Polyline({ path, map, strokeColor: "#00a35c", strokeWeight: 5 });
+    const b = new google.maps.LatLngBounds(); path.forEach(p => b.extend(p)); map.fitBounds(b, 60);
+    const fare = Math.max(MIN, Math.round((BASE + km * PER_KM) / 500) * 500);
+    $("price").textContent = fmt(fare);
+    $("meta").textContent = "Jarak " + km.toFixed(1).replace(".", ",") + " km · Estimasi " + Math.max(3, Math.round(min)) + " menit";
+    $("fare").style.display = "block";
+    $("hint").textContent = "Titik sudah dipilih. Geser pin atau cari lokasi lain untuk mengubah.";
   }
 
-  // ketuk ongkos 3x -> popup ID driver
-  var taps=0,tm=null;
-  $("fare").addEventListener("click",function(){
-    if(locked)return;
-    taps++;clearTimeout(tm);tm=setTimeout(function(){taps=0},700);
-    if(taps>=3){taps=0;openModal()}
+  // ----- ketuk ongkos 3x -> popup ID driver -----
+  let taps = 0, tm = null;
+  $("fare").addEventListener("click", () => {
+    if (locked) return;
+    taps++; clearTimeout(tm); tm = setTimeout(() => taps = 0, 700);
+    if (taps >= 3) { taps = 0; openModal(); }
   });
-  function openModal(){$("did").value="";$("err").textContent="";$("modal").classList.add("show");setTimeout(function(){$("did").focus()},50)}
-  function closeModal(){$("modal").classList.remove("show")}
-  $("cancel").onclick=closeModal;
-  function submit(){
-    if($("did").value.trim()===DRIVER_ID){closeModal();start()}
-    else{$("err").textContent="ID driver tidak dikenali.";var b=$("box");b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}
+  const openModal = () => { $("did").value = ""; $("err").textContent = ""; $("modal").classList.add("show"); setTimeout(() => $("did").focus(), 50); };
+  const closeModal = () => $("modal").classList.remove("show");
+  $("cancel").onclick = closeModal;
+  function submit() {
+    if ($("did").value.trim() === DRIVER_ID) { closeModal(); start(); }
+    else { $("err").textContent = "ID driver tidak dikenali."; const b = $("box"); b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake"); }
   }
-  $("ok").onclick=submit;
-  $("did").addEventListener("keydown",function(e){if(e.key==="Enter")submit()});
+  $("ok").onclick = submit;
+  $("did").addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
 
-  function steps(n){
-    var s=["Driver menerima pesanan","Driver menuju titik jemput","Dalam perjalanan ke tujuan","Sampai di tujuan"];
-    $("status").innerHTML=s.map(function(t,i){return '<div class="step '+(i<n?"done":i===n?"on":"")+'">'+(i<n?"✓ ":i===n?"● ":"○ ")+t+(i===0?" · ID "+DRIVER_ID:"")+'</div>'}).join("");
+  // ----- simulasi pengantaran -----
+  function steps(n) {
+    const s = ["Driver menerima pesanan", "Driver menuju titik jemput", "Dalam perjalanan ke tujuan", "Sampai di tujuan"];
+    $("status").innerHTML = s.map((t, i) => '<div class="step ' + (i < n ? "done" : i === n ? "on" : "") + '">' +
+      (i < n ? "✓ " : i === n ? "● " : "○ ") + t + (i === 0 ? " · ID " + DRIVER_ID : "") + "</div>").join("");
   }
-  var mD=null;
-  function start(){
-    locked=true;mA.dragging.disable();mB.dragging.disable();
-    $("status").style.display="block";$("hint").textContent="Pesanan diproses.";steps(0);
-    var from=L.latLng(A.lat+0.004,A.lng+0.004);
-    mD=L.marker(from,{icon:icon("d")}).addTo(map);
-    setTimeout(function(){
+  function tween(dur, fn, done) {
+    let t0 = null; (function f(ts) { if (!t0) t0 = ts; const k = Math.min(1, (ts - t0) / dur); fn(k); k < 1 ? requestAnimationFrame(f) : done(); })(performance.now());
+  }
+  function start() {
+    locked = true; M.A.gmpDraggable = false; M.B.gmpDraggable = false;
+    $("status").style.display = "block"; $("hint").textContent = "Pesanan diproses."; steps(0);
+    const from = { lat: P.A.lat + 0.004, lng: P.A.lng + 0.004 };
+    drv = new AdvancedMarkerElement({ map, position: from, content: pinEl("d") });
+    setTimeout(() => {
       steps(1);
-      tween(2500,function(k){mD.setLatLng([from.lat+(A.lat-from.lat)*k,from.lng+(A.lng-from.lng)*k])},function(){
+      tween(2500, k => drv.position = { lat: from.lat + (P.A.lat - from.lat) * k, lng: from.lng + (P.A.lng - from.lng) * k }, () => {
         steps(2);
-        var n=coords.length-1,dur=Math.max(4000,Math.min(15000,n*40));
-        tween(dur,function(k){
-          var f=k*n,i=Math.min(n-1,Math.floor(f)),t=f-i,p=coords[i],q=coords[i+1];
-          mD.setLatLng([p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t]);
-        },function(){steps(4);$("hint").textContent="Pesanan selesai."});
+        const n = coords.length - 1, dur = Math.max(4000, Math.min(15000, n * 40));
+        tween(dur, k => {
+          const f = k * n, i = Math.min(n - 1, Math.floor(f)), t = f - i, p = coords[i], q = coords[i + 1];
+          drv.position = { lat: p.lat + (q.lat - p.lat) * t, lng: p.lng + (q.lng - p.lng) * t };
+        }, () => { steps(4); $("hint").textContent = "Pesanan selesai."; });
       });
-    },1200);
-  }
-  function tween(dur,fn,done){
-    var t0=null;(function f(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/dur);fn(k);if(k<1)requestAnimationFrame(f);else done()})(performance.now());
+    }, 1200);
   }
 
-  $("loc").onclick=function(){
-    if(locked||!navigator.geolocation)return;
-    navigator.geolocation.getCurrentPosition(function(p){
-      var ll=L.latLng(p.coords.latitude,p.coords.longitude);
-      if(mB){map.removeLayer(mB);mB=null}B=null;clearRoute();$("tb").textContent="Belum dipilih";
-      setA(ll);map.setView(ll,16);$("hint").textContent="Sekarang ketuk peta untuk memilih titik antar.";
-    },function(){$("hint").textContent="Lokasi tidak bisa diakses. Pilih titik jemput di peta."});
+  // ----- lokasi saya & reset -----
+  $("loc").onclick = () => {
+    if (locked || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(async p => {
+      const ll = { lat: p.coords.latitude, lng: p.coords.longitude };
+      removePoint("B"); clearRoute(); map.setCenter(ll); map.setZoom(16);
+      setPoint("A", ll, null); const n = await nameOf(ll); $("ta").innerHTML = "<b>" + LBL.A + "</b>" + esc(n); syncInput("A", n);
+    }, () => { $("hint").textContent = "Lokasi tidak bisa diakses. Cari lokasi jemput secara manual."; });
   };
-
-  $("reset").onclick=function(){
-    locked=false;token++;
-    [mA,mB,mD].forEach(function(m){if(m)map.removeLayer(m)});mA=mB=mD=null;A=B=null;clearRoute();
-    $("ta").textContent=$("tb").textContent="Belum dipilih";$("status").style.display="none";
-    $("hint").textContent="Ketuk peta untuk memilih titik jemput.";
+  $("reset").onclick = () => {
+    locked = false; token++; removePoint("A"); removePoint("B"); clearRoute();
+    if (drv) { drv.map = null; drv = null; }
+    $("status").style.display = "none"; $("hint").textContent = "Cari lokasi jemput, atau ketuk peta.";
   };
-})();
+}
 </script>
 </body>
 </html>
