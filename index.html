@@ -238,6 +238,61 @@
         .k-tb{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:.5rem;color:#334155;background:transparent;transition:background .15s}
         .k-tb:hover{background:#e2e8f0}
     </style>
+<style>
+/* ===== Landing info PT (sebelum login) ===== */
+.landing{height:auto!important;min-height:100vh;min-height:100dvh;background:#f3f7ff}
+.co-wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.co-bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;background:#0a1c4a;border-bottom:1px solid rgba(255,255,255,.12)}
+.co-brand{display:flex;align-items:center;gap:10px}
+.co-mark{width:38px;height:38px;border-radius:10px;background:#f5b73b;color:#0a1c4a;font:900 20px Outfit,sans-serif;display:flex;align-items:center;justify-content:center}
+.co-brand-txt{display:flex;flex-direction:column;line-height:1.1}
+.co-brand-txt b{font:800 16px Outfit,sans-serif;letter-spacing:.06em;color:#fff}
+.co-brand-txt small{font-size:11px;color:#9db6e8;margin-top:2px}
+.co-login{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:#fff;color:#0f2a6b;font-weight:800;font-size:13px;transition:transform .2s,box-shadow .2s}
+.co-login:hover{transform:translateY(-1px);box-shadow:0 8px 20px -8px rgba(0,0,0,.5)}
+.co-hero{background:var(--hero);color:#fff;padding:56px 0 64px;overflow:hidden}
+.co-hero-grid{display:grid;gap:40px;align-items:center}
+.co-name{font-weight:700;font-size:14px;color:#f5b73b;margin-bottom:14px}
+.co-hero h1{font:800 clamp(30px,5.4vw,52px)/1.08 Outfit,sans-serif;letter-spacing:-.01em;max-width:15em}
+.co-lead{margin-top:18px;max-width:34em;font-size:16px;line-height:1.7;color:#d6e3ff}
+.co-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.co-cta-c{justify-content:center}
+.co-btn{padding:13px 22px;border-radius:12px;font-weight:800;font-size:14px;transition:transform .2s,box-shadow .2s,background .2s}
+.co-btn:hover{transform:translateY(-1px)}
+.co-btn-solid{background:#fff;color:#0f2a6b}
+.co-btn-amber{background:#f5b73b;color:#0a1c4a}
+.co-btn-ghost{border:1.5px solid rgba(255,255,255,.55);color:#fff}
+.co-btn-ghost:hover{background:rgba(255,255,255,.12)}
+.co-clip{width:100%;max-width:440px;justify-self:center}
+.co-t{fill:#9db6e8;font:600 12px 'Plus Jakarta Sans',sans-serif}
+.co-strip{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.35)}
+.co-ticks path{stroke:rgba(255,255,255,.22);stroke-width:1}
+.co-hit{fill:#f5b73b}
+.co-cut{stroke:#f5b73b;stroke-width:2;stroke-dasharray:4 5;fill:none;animation:coDash 1.6s linear infinite}
+.co-phone{fill:rgba(255,255,255,.1);stroke:#f5b73b;stroke-width:2}
+.co-play{fill:#fff}
+@keyframes coDash{to{stroke-dashoffset:-18}}
+.co-sec{padding:64px 0;color:#0b1b3a}
+.co-sec-alt{background:#fff;border-block:1px solid #dbe6fb}
+.co-sec h2,.co-end h2{font:800 clamp(24px,3.6vw,34px)/1.15 Outfit,sans-serif}
+.co-svc{margin-top:28px;border-top:1px solid #cfdcf6}
+.co-svc article{display:grid;grid-template-columns:28px 1fr;gap:18px;padding:24px 0;border-bottom:1px solid #cfdcf6}
+.co-svc svg{color:#1d4ed8;margin-top:3px}
+.co-svc h3{font:800 18px Outfit,sans-serif}
+.co-svc p{margin-top:6px;max-width:46em;line-height:1.7;color:#475a7e;font-size:15px}
+.co-plat{margin-top:22px;color:#475a7e;font-size:14px}
+.co-plat b{color:#0b1b3a}
+.co-vm{display:grid;gap:40px}
+.co-visi{margin-top:16px;font:600 clamp(19px,2.4vw,24px)/1.5 Outfit,sans-serif;color:#1e40af}
+.co-misi{margin-top:16px;display:grid;gap:14px;list-style:none;padding:0}
+.co-misi li{display:grid;grid-template-columns:22px 1fr;gap:12px;line-height:1.65;color:#475a7e;font-size:15px}
+.co-misi svg{color:#1d4ed8;margin-top:2px}
+.co-end{background:#0a1c4a;color:#fff;text-align:center;padding:60px 0}
+.co-end p{margin-top:10px;color:#b9cdf5}
+.co-foot{background:#06122f;color:#8fa8dc;text-align:center;font-size:12px;padding:20px}
+@media(min-width:860px){.co-hero-grid{grid-template-columns:1.15fr .85fr}.co-vm{grid-template-columns:1fr 1.1fr;gap:64px}.co-hero{padding:80px 0 88px}}
+@media(max-width:520px){.co-login span{display:none}.co-login{padding:10px}}
+</style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-slate-900 selection:text-white">
 
@@ -245,35 +300,88 @@
     <!-- SECTION 1: AUTENTIKASI (LOG IN & PENDAFTARAN)                     -->
     <!-- ================================================================= -->
     <div id="view-auth" class="landing w-full flex flex-col">
-        <!-- Bar atas: logo + ikon user (Masuk / Daftar) -->
-        <div class="landing-bar flex items-center justify-between gap-3 px-4 sm:px-6 py-3 shrink-0">
-            <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg shrink-0" style="background:linear-gradient(135deg,#60a5fa,#2563eb);color:#fff">Z</div>
-                <div class="min-w-0">
-                    <h2 class="font-heading font-black text-white text-base sm:text-lg leading-tight tracking-wider">ZHEDVANOIS<span style="color:#93c5fd">.ID</span></h2>
-                    <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest truncate" style="color:#bcd2f5">Blog &amp; Portal Member</p>
-                </div>
+        <header class="co-bar">
+            <div class="co-brand">
+                <span class="co-mark">Z</span>
+                <span class="co-brand-txt"><b>ZHEDVANOIS</b><small>Creative Agency</small></span>
             </div>
-            <div class="flex items-center gap-3">
-                <a href="https://baca.zhedvanois.id/" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-bold text-white border border-white/20 hover:bg-white/10 transition">
-                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i><span>Tab Baru</span>
-                </a>
-                <button type="button" onclick="openAuthModal('login')" title="Masuk / Daftar" aria-label="Masuk atau Daftar" class="user-fab relative">
-                    <i data-lucide="user" class="w-5 h-5"></i>
-                    <span class="dot"></span>
-                </button>
-            </div>
-        </div>
+            <button type="button" onclick="openAuthModal('login')" class="co-login" aria-label="Masuk atau Daftar">
+                <i data-lucide="user" class="w-4 h-4"></i><span>Masuk / Daftar</span>
+            </button>
+        </header>
 
-        <!-- Blog baca.zhedvanois.id full -->
-        <div class="relative flex-1 min-h-0">
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6" style="color:#bcd2f5">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 mb-3" style="border-color:#60a5fa;border-top-color:transparent"></div>
-                <p class="text-xs font-semibold">Memuat blog baca.zhedvanois.id...</p>
-                <a href="https://baca.zhedvanois.id/" target="_blank" rel="noopener noreferrer" class="mt-2 text-[11px] underline" style="color:#bfdbfe">Tidak tampil? Buka di tab baru</a>
-            </div>
-            <iframe src="https://baca.zhedvanois.id/" title="Blog ZHEDVANOIS" class="absolute inset-0 w-full h-full border-0 bg-white" loading="eager"></iframe>
-        </div>
+        <main class="co">
+            <section class="co-hero">
+                <div class="co-wrap co-hero-grid">
+                    <div class="co-hero-copy">
+                        <p class="co-name">PT Zhedvanois Creative Agency</p>
+                        <h1>Video panjang dipotong jadi konten pendek yang sampai ke audiens.</h1>
+                        <p class="co-lead">Agensi digital progresif yang berfokus pada inovasi konten media dan distribusi visual. Kami menghubungkan audiens dengan konten yang relevan, cepat, dan berdampak tinggi.</p>
+                        <div class="co-cta">
+                            <button type="button" onclick="openAuthModal('register')" class="co-btn co-btn-solid">Daftar jadi member</button>
+                            <button type="button" onclick="openAuthModal('login')" class="co-btn co-btn-ghost">Masuk ke portal</button>
+                        </div>
+                    </div>
+                    <svg class="co-clip" viewBox="0 0 420 330" role="img" aria-label="Satu video panjang dipotong menjadi tiga klip pendek vertikal">
+                        <text x="0" y="14" class="co-t">Video panjang</text>
+                        <rect x="0" y="24" width="420" height="64" rx="10" class="co-strip"/>
+                        <g class="co-ticks"><path d="M35 24v64M70 24v64M105 24v64M140 24v64M175 24v64M210 24v64M245 24v64M280 24v64M315 24v64M350 24v64M385 24v64"/></g>
+                        <rect x="35" y="24" width="35" height="64" class="co-hit"/>
+                        <rect x="175" y="24" width="35" height="64" class="co-hit"/>
+                        <rect x="315" y="24" width="70" height="64" class="co-hit"/>
+                        <path class="co-cut" d="M52 88v70M192 88v70M350 88v70"/>
+                        <text x="0" y="318" class="co-t">Klip pendek untuk media sosial</text>
+                        <rect x="22" y="160" width="60" height="140" rx="10" class="co-phone"/>
+                        <rect x="162" y="160" width="60" height="140" rx="10" class="co-phone"/>
+                        <rect x="320" y="160" width="60" height="140" rx="10" class="co-phone"/>
+                        <path class="co-play" d="M46 218l14 8-14 8zM186 218l14 8-14 8zM344 218l14 8-14 8z"/>
+                    </svg>
+                </div>
+            </section>
+
+            <section class="co-sec">
+                <div class="co-wrap">
+                    <h2>Tiga layanan, satu alur konten</h2>
+                    <div class="co-svc">
+                        <article><i data-lucide="newspaper" class="w-6 h-6"></i><div><h3>Platform media berita digital</h3><p>Portal berita terkurasi, aktual, dan kredibel dengan penyajian yang dinamis dan relevan bagi audiens masa kini.</p></div></article>
+                        <article><i data-lucide="clapperboard" class="w-6 h-6"></i><div><h3>Layanan video clipping</h3><p>Video panjang diolah dan dikurasi menjadi konten pendek bernilai tinggi untuk memaksimalkan engagement, reach, dan potensi viral di berbagai platform.</p></div></article>
+                        <article><i data-lucide="share-2" class="w-6 h-6"></i><div><h3>Distribusi dan strategi konten</h3><p>Alur distribusi berbasis data yang membantu kreator, brand, dan entitas media mencapai keterlibatan audiens yang maksimal.</p></div></article>
+                    </div>
+                    <p class="co-plat">Format pendek untuk <b>TikTok</b>, <b>Instagram Reels</b>, dan <b>YouTube Shorts</b>.</p>
+                </div>
+            </section>
+
+            <section class="co-sec co-sec-alt">
+                <div class="co-wrap co-vm">
+                    <div>
+                        <h2>Visi</h2>
+                        <p class="co-visi">Menjadi pelopor ekosistem media digital terdepan di Indonesia yang menginspirasi, mengedukasi, dan menghibur melalui konten berkualitas tinggi serta distribusi visual yang inovatif.</p>
+                    </div>
+                    <div>
+                        <h2>Misi</h2>
+                        <ul class="co-misi">
+                            <li><i data-lucide="check-circle-2" class="w-5 h-5"></i><span>Menyajikan informasi digital yang akurat, cepat, dan mudah diakses oleh berbagai lapisan masyarakat.</span></li>
+                            <li><i data-lucide="check-circle-2" class="w-5 h-5"></i><span>Mengembangkan ekosistem video clipping kreatif yang memaksimalkan potensi konten audio-visual di ranah digital.</span></li>
+                            <li><i data-lucide="check-circle-2" class="w-5 h-5"></i><span>Menerapkan teknologi dan strategi berbasis data untuk mengoptimalkan jangkauan serta keterlibatan audiens.</span></li>
+                            <li><i data-lucide="check-circle-2" class="w-5 h-5"></i><span>Membangun kemitraan strategis dengan kreator, pelaku industri, dan pemegang merek untuk dampak media yang berkelanjutan.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="co-end">
+                <div class="co-wrap">
+                    <h2>Sudah jadi bagian dari tim?</h2>
+                    <p>Masuk untuk mengerjakan tugas, absen, dan membaca di Ruang Baca.</p>
+                    <div class="co-cta co-cta-c">
+                        <button type="button" onclick="openAuthModal('login')" class="co-btn co-btn-amber">Masuk</button>
+                        <button type="button" onclick="openAuthModal('register')" class="co-btn co-btn-ghost">Daftar member</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="co-foot">&copy; 2026 PT ZHEDVANOIS CREATIVE AGENCY. All rights reserved.</footer>
 
         <!-- Modal Masuk / Daftar (muncul saat ikon user diklik) -->
         <div id="auth-modal" class="hidden fixed inset-0 z-[60] items-start justify-center p-4 overflow-y-auto auth-backdrop" onclick="if(event.target===this)closeAuthModal()">
@@ -597,11 +705,7 @@
                             </a>
                             <a href="#karya" onclick="showAppSection('karya'); toggleMenu()" id="nav-link-karya" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition">
                                 <i data-lucide="book-open" class="w-4 h-4 text-slate-500"></i>
-                                <span>Karya</span>
-                            </a>
-                            <a href="#blog" onclick="showAppSection('blog'); toggleMenu()" id="nav-link-blog" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition">
-                                <i data-lucide="newspaper" class="w-4 h-4 text-slate-500"></i>
-                                <span>Blog</span>
+                                <span>Ruang Baca</span>
                             </a>
                             <a href="#bantuan" onclick="showAppSection('bantuan'); toggleMenu()" id="nav-link-bantuan" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition">
                                 <i data-lucide="life-buoy" class="w-4 h-4 text-slate-500"></i>
@@ -720,7 +824,7 @@
                         </button>
                         <button type="button" onclick="showAppSection('karya')" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col items-center gap-2 hover:border-slate-900 transition active:scale-95">
                             <span class="w-11 h-11 rounded-xl bg-indigo-500/10 text-indigo-700 flex items-center justify-center"><i data-lucide="book-open" class="w-5 h-5"></i></span>
-                            <span class="text-[11px] font-extrabold text-slate-800 text-center leading-tight">Karya</span>
+                            <span class="text-[11px] font-extrabold text-slate-800 text-center leading-tight">Ruang Baca</span>
                         </button>
                         <button type="button" onclick="showAppSection('riwayat')" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col items-center gap-2 hover:border-slate-900 transition active:scale-95">
                             <span class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-700 flex items-center justify-center"><i data-lucide="history" class="w-5 h-5"></i></span>
@@ -753,58 +857,6 @@
                         </div>
                     </div>
 
-                    <!-- Informasi Perusahaan -->
-                    <div class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-lg">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-xl bg-white text-slate-900 font-black text-xl flex items-center justify-center shrink-0">Z</div>
-                            <div class="min-w-0">
-                                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Tentang Perusahaan</p>
-                                <h3 class="text-lg md:text-xl font-black mt-0.5 leading-snug">PT ZHEDVANOIS CREATIVE AGENCY</h3>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-300 mt-4 leading-relaxed">PT Zhedvanois Creative Agency adalah agensi digital progresif yang berfokus pada inovasi konten media dan distribusi visual. Kami hadir untuk mendefinisikan ulang cara informasi dan hiburan dikonsumsi di era digital, menghubungkan audiens dengan konten yang relevan, cepat, dan berdampak tinggi.</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-                            <div class="rounded-xl bg-white/5 border border-white/10 p-4">
-                                <i data-lucide="newspaper" class="w-5 h-5 text-amber-300 mb-2"></i>
-                                <p class="text-xs font-extrabold">Media Berita Digital</p>
-                                <p class="text-[11px] text-slate-400 mt-1 leading-snug">Portal berita terkurasi, aktual, dan kredibel.</p>
-                            </div>
-                            <div class="rounded-xl bg-white/5 border border-white/10 p-4">
-                                <i data-lucide="clapperboard" class="w-5 h-5 text-amber-300 mb-2"></i>
-                                <p class="text-xs font-extrabold">Video Clipping</p>
-                                <p class="text-[11px] text-slate-400 mt-1 leading-snug">Video panjang diolah jadi konten pendek bernilai tinggi.</p>
-                            </div>
-                            <div class="rounded-xl bg-white/5 border border-white/10 p-4">
-                                <i data-lucide="share-2" class="w-5 h-5 text-amber-300 mb-2"></i>
-                                <p class="text-xs font-extrabold">Distribusi & Strategi Konten</p>
-                                <p class="text-[11px] text-slate-400 mt-1 leading-snug">Alur distribusi konten berbasis data.</p>
-                            </div>
-                        </div>
-                        <button type="button" onclick="showAppSection('aboutus')" class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-slate-900 bg-white hover:bg-slate-100 px-4 py-2 rounded-xl transition">
-                            Selengkapnya <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
-
-                    <!-- Karya (geser ke samping) -->
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="p-6 border-b border-slate-100 flex items-center justify-between gap-3 bg-slate-50/50">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <i data-lucide="book-open" class="w-5 h-5 text-slate-700 shrink-0"></i>
-                                <div class="min-w-0">
-                                    <h3 class="font-extrabold text-slate-900 text-base leading-tight">Karya ZHEDVANOIS</h3>
-                                    <p class="text-[11px] text-slate-500 font-medium">Artikel, berita, opini & resensi terbaru. Geser ke samping untuk melihat lainnya.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 shrink-0">
-                                <button type="button" onclick="scrollHomeKarya(-1)" class="hidden sm:flex w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 items-center justify-center" aria-label="Geser kiri"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                <button type="button" onclick="scrollHomeKarya(1)" class="hidden sm:flex w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 items-center justify-center" aria-label="Geser kanan"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                                <button type="button" onclick="showAppSection('karya')" class="text-xs font-bold text-slate-900 hover:underline whitespace-nowrap">Lihat Semua</button>
-                            </div>
-                        </div>
-                        <div id="home-karya-track" class="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide scroll-smooth p-6">
-                            <p class="text-xs text-slate-400 py-6">Memuat karya...</p>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -928,13 +980,13 @@
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center"><i data-lucide="book-open" class="w-5 h-5"></i></div>
                         <div>
-                            <h2 class="font-black text-base text-slate-900">KARYA ZHEDVANOIS</h2>
+                            <h2 class="font-black text-base text-slate-900">RUANG BACA ZHEDVANOIS</h2>
                             <p id="karya-count" class="text-xs text-slate-500 font-medium">Artikel, berita, opini, resensi, dan karya lainnya.</p>
                         </div>
                     </div>
                     <div class="relative sm:w-72">
                         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-                        <input type="text" id="karya-search" oninput="karyaSetQuery(this.value)" placeholder="Cari karya..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition">
+                        <input type="text" id="karya-search" oninput="karyaSetQuery(this.value)" placeholder="Cari di Ruang Baca..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition">
                     </div>
                 </div>
                 <div id="karya-chips" class="flex gap-2 overflow-x-auto scrollbar-hide pb-1"></div>
@@ -1271,37 +1323,6 @@
             </section>
 
             <!-- ========================================================= -->
-            <!-- SUB-HALAMAN 5C: BLOG (ZHEDVANOIS.ID)                       -->
-            <!-- ========================================================= -->
-            <section id="sec-blog" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-4">
-                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
-                            <i data-lucide="newspaper" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h2 class="font-black text-base text-slate-900">BLOG ZHEDVANOIS</h2>
-                            <p class="text-xs text-slate-500 font-medium">Berita, artikel, dan update terbaru dari baca.zhedvanois.id.</p>
-                        </div>
-                    </div>
-                    <a href="https://baca.zhedvanois.id/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-xl transition flex items-center gap-1.5 uppercase tracking-wider shrink-0">
-                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                        <span>Buka Tab Baru</span>
-                    </a>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative min-h-[75vh]">
-                    <iframe
-                        id="blogIframe"
-                        src="https://baca.zhedvanois.id/"
-                        title="Blog ZHEDVANOIS"
-                        class="w-full h-[80vh] min-h-[650px] border-0"
-                        loading="lazy"
-                    ></iframe>
-                </div>
-            </section>
-
-            <!-- ========================================================= -->
             <!-- SUB-HALAMAN 5D: ABOUT US                                   -->
             <!-- ========================================================= -->
             <section id="sec-aboutus" class="hidden max-w-4xl mx-auto px-4 py-8 w-full space-y-6">
@@ -1562,7 +1583,7 @@
                             <i data-lucide="book-open" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-extrabold text-slate-900 leading-snug">Kelola Karya</h3>
+                            <h3 class="text-sm font-extrabold text-slate-900 leading-snug">Kelola Ruang Baca</h3>
                             <p class="text-[11px] text-slate-500 mt-1 leading-snug">Tulis, edit & hapus artikel, berita, opini</p>
                         </div>
                     </button>
@@ -2239,7 +2260,7 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs">
+                        <table class="w-full min-w-[760px] text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
                                     <th class="p-3">Member</th>
@@ -3103,7 +3124,7 @@
                 try { karyaId = decodeURIComponent(pageId.slice(6)); } catch (e) { karyaId = pageId.slice(6); }
                 pageId = 'karyadetail';
             }
-            const sections = ['beranda', 'trackermisi', 'analitik', 'riwayat', 'transaksi', 'ecomerce', 'affiliate', 'riwayatbeli', 'topup', 'bantuan', 'blog', 'aboutus', 'akun', 'absen', 'karya', 'karyadetail', 'admin'];
+            const sections = ['beranda', 'trackermisi', 'analitik', 'riwayat', 'transaksi', 'ecomerce', 'affiliate', 'riwayatbeli', 'topup', 'bantuan', 'aboutus', 'akun', 'absen', 'karya', 'karyadetail', 'admin'];
             const target = sections.includes(pageId) ? pageId : 'beranda';
 
             // Protect Admin Page (izinkan role admin & ops)
@@ -3800,7 +3821,7 @@
             }
             if (tab === 'absensi') {
                 const dEl = document.getElementById('admin-att-date');
-                if (dEl && !dEl.dataset.init) { const n = new Date(); dEl.value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; dEl.dataset.init = '1'; }
+                if (dEl) dEl.dataset.init = '1';
                 if (typeof renderAdminAttendance === 'function') renderAdminAttendance();
             }
             if (typeof safeLucideIcons === 'function') safeLucideIcons();
@@ -5514,8 +5535,7 @@
         /* FITUR BARU: KARYA (BLOG), AKUN, ABSENSI, HAPUS MEMBER             */
         /* ================================================================= */
 
-        // Alamat dasar situs blog lama. Dipakai untuk tautan "Baca versi lengkap"
-        // pada karya hasil ekspor Blogger. Ubah di sini jika alamat blog berbeda.
+        // Alamat dasar situs blog lama. Dipakai untuk menyimpan sumber karya hasil ekspor Blogger. Ubah di sini jika alamat blog berbeda.
         const KARYA_SOURCE_BASE = 'https://baca.zhedvanois.id/';
 
         // Data karya hasil ekspor Blogger (file index.html kedua)
@@ -5727,7 +5747,6 @@
                 body = karyaSanitize(k.content);
             } else {
                 body = `<p>${kEsc(k.excerpt || '')}</p>`;
-                if (k.sourceUrl) body += `<div class="not-prose mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">Ini adalah ringkasan karya. <a href="${kEsc(k.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-600 hover:underline">Baca versi lengkap di sumber asli ↗</a></div>`;
             }
             const cover = kCover(k.cover, 1000);
             const labels = (k.labels || []).map(l => `<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-wider">${kEsc(l)}</span>`).join('');
@@ -6282,7 +6301,7 @@
         };
 
         function absCell(id, rec, type) {
-            if (!rec) return '<span class="text-slate-300">-</span>';
+            if (!rec) return type === 'out' ? '<span class="inline-block px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[11px] font-bold">Belum</span>' : '<span class="text-slate-300">-</span>';
             const map = absMaps(rec);
             return `<div class="flex items-center gap-2">
                 ${rec.photo ? `<button type="button" onclick="viewAbsenPhoto('${kEsc(id)}','${type}')" class="shrink-0"><img src="${rec.photo}" alt="Selfie" class="w-11 h-11 rounded-lg object-cover border border-slate-200"></button>` : ''}
@@ -6297,13 +6316,14 @@
             const term = (document.getElementById('admin-att-search')?.value || '').trim().toLowerCase();
             let rows = Object.values(window.allAttendance);
             if (dateF) rows = rows.filter(r => r.date === dateF);
+            rows = rows.filter(r => r.clockIn || r.clockOut);
             if (term) rows = rows.filter(r => ((r.userNama || '') + ' ' + (r.email || '')).toLowerCase().includes(term));
             rows.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (a.userNama || '').localeCompare(b.userNama || ''));
             const cnt = document.getElementById('admin-att-count');
             if (cnt) cnt.textContent = `(${rows.length} data)`;
             if (!rows.length) { body.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">Tidak ada data absensi.</td></tr>'; return; }
             const isAdmin = window.currentUserProfile?.role === 'admin';
-            body.innerHTML = rows.slice(0, 300).map(r => `<tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
+            body.innerHTML = rows.slice(0, 300).map(r => `<tr class="border-b border-slate-100 hover:bg-slate-50 text-xs align-top">
                 <td class="p-3 font-bold text-slate-900">${kEsc(r.userNama || '-')}<br><span class="font-normal text-slate-400 text-[11px]">${kEsc(r.email || '')}</span></td>
                 <td class="p-3 text-slate-700">${kFmtDate(r.date + 'T00:00:00')}</td>
                 <td class="p-3">${absCell(r.id, r.clockIn, 'in')}</td>
